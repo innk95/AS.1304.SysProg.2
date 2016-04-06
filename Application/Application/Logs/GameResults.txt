@@ -1,0 +1,5 @@
+-------------------GAME RESULTS----------------------
+NPC		319
+Author3		97
+Author1		63
+Author2		63
