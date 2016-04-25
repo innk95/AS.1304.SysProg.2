@@ -92,7 +92,8 @@ VictimInfo getVictimInfo(){
 	UINT victimID = 1000;
 	for (auto it = stepInfo->robotsInfo.begin(); it != stepInfo->robotsInfo.end(); ++it) {
 		Point vec = getDistance(Point(myInfo->x, myInfo->y), Point(it->x, it->y));
-		if (Pythagoras(vec.x, vec.y) < Pythagoras(min_dX, min_dY) && it->ID != myInfo->ID && it->Alive) {
+		if (Pythagoras(vec.x, vec.y) < Pythagoras(min_dX, min_dY) &&
+			it->Alive && myInfo->Author.compare(it->Author) != 0) {
 			real_dX = vec.x;
 			real_dY = vec.y;
 			min_dX = abs(vec.x);
