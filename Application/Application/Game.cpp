@@ -114,6 +114,7 @@ Game::~Game()
 
 	DeleteCriticalSection(&m_CS_Draw);
 	//DeleteCriticalSection(&m_CS_ChangeVar);
+
 }
 
 void ConfigStore::addRoundConfig(GameConfig gameConfig)
@@ -1126,6 +1127,7 @@ Robot Game::getRobotInfo(USHORT num)
 bool Game::setRobotsInfo(CString filePath)
 {
 	SetCurrentDirectory(m_Directory);
+
 	for (auto it = m_Robots_global.begin(); it != m_Robots_global.end(); ++it){
 		if ((*it)->hDll){
 			FreeLibrary((*it)->hDll);
@@ -1464,9 +1466,7 @@ bool Game::end()
 		clearArea(Color::GRAY, LEFT_SIDE_OF_STATS - 2, 30, LEFT_SIDE_OF_STATS + CONDITIONS_WIDTH, CONDITIONS_START_Y + CONDITIONS_TOTAL_HEIGHT);
 		m_RoundNum = 0;
 		m_StepNum = 0;
-		for (auto it = m_Robots_start.begin(); it != m_Robots_start.end(); ++it){
-			FreeLibrary(it->second.hDll);
-		}
+		
 		m_Robots_start.clear();
 		m_Robots_self.clear();
 		m_Robots_other.clear();
