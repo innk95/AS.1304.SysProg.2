@@ -100,5 +100,5 @@ extern "C" __declspec(dllexport) void DoStep(StepInfo* _stepInfo)
 			}
 		}
 	}
-
+delete myInfo;
 }
