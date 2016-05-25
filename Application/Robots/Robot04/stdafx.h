@@ -5,6 +5,9 @@
 
 #pragma once
 
+#define _USE_MATH_DEFINES 
+#include <cmath>
+
 #include "targetver.h"
 
 #define WIN32_LEAN_AND_MEAN             // Исключите редко используемые компоненты из заголовков Windows
