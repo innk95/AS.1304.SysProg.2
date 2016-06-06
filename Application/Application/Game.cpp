@@ -986,15 +986,17 @@ bool Game::doActionAttack(UINT robot_id, UINT victim_id)
 	int dE = abs(delta) * m_Config.E_max / m_Config.L_max;
 	if (delta > 0){
 		other_robot->P -= delta;
+		other_robot->L -= delta;
 		if (other_robot->P < 0){
-			other_robot->P = 0;
+			other_robot->P = 0;			
 			other_robot->E -= dE;
 		}
 	}
 	else{
 		self_robot->A += delta;
+		self_robot->L += delta;
 		if (self_robot->A < 0){
-			self_robot->A = 0;
+			self_robot->A = 0;			
 			self_robot->E -= dE;			
 		}
 	}
