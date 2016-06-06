@@ -12,6 +12,10 @@
 #include <windows.h>
 
 #include "../../Resources/resources.h"
+#include <fstream>
+#include <algorithm>
+#include <set>
+#include <string>
 
 
 // TODO: Установите здесь ссылки на дополнительные заголовки, требующиеся для программы

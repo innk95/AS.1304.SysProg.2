@@ -3,3 +3,4 @@ StandartRobot.dll Robot2 Author2
 StandartRobot.dll Robot3 Author3
 Robot13.dll TemerMaker Lazutkin
 Robot04.dll TRASH_SPEED_METAL Bezzemeltsev
+Robot19.dll Tinky-Winky Timoshin
