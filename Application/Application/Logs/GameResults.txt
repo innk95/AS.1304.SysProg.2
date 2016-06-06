@@ -1,8 +1,0 @@
--------------------GAME RESULTS----------------------
-NPC		49
-Timoshin		15
-Author3		11
-Bezzemeltsev		11
-Lazutkin		11
-Author1		9
-Author2		9
