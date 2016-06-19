@@ -3,3 +3,4 @@ Robot04.dll TRASH_SPEED_METAL Bezzemeltsev
 Robot19.dll Tinky-Winky Timoshin
 Robot08.dll Dimitrieva Dimitrieva
 Robot12.dll Gavriil Kysylbaikov
+Robot07.dll Dipsy Gutkina
