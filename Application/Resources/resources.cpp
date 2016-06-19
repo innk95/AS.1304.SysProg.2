@@ -46,13 +46,13 @@ RobotActions::~RobotActions()
 	}
 }
 
-void RobotActions::addActionMove(unsigned int x, unsigned int y)
+void RobotActions::addActionMove(int dx, int dy)
 {
-	Move* pMove = new Move(x, y);
+	Move* pMove = new Move(dx, dy);
 	m_Actions.push_back(pMove);
 }
 
-void RobotActions::addActionAttack(unsigned int victimID /*ID атакуемого робота*/)
+void RobotActions::addActionAttack(unsigned int victimID /*ID Г ГІГ ГЄГіГҐГ¬Г®ГЈГ® Г°Г®ГЎГ®ГІГ */)
 {
 	Attack* pAttack = new Attack(victimID);
 	m_Actions.push_back(pAttack);
