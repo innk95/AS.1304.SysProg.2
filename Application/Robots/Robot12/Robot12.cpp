@@ -17,7 +17,6 @@ struct Characteristics
 };
 
 
-
 struct VictimInfo
 {
 	VictimInfo(int _dX, int _dY, UINT _ID) :
