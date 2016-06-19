@@ -12,6 +12,6 @@
 #include <windows.h>
 
 #include "../../Resources/resources.h"
-
+#include <set>
 
 // TODO: Установите здесь ссылки на дополнительные заголовки, требующиеся для программы
