@@ -4,7 +4,7 @@
 #include <list>
 using namespace std;
 
-struct GameConfig//Настройки игры
+struct GameConfig//ГЌГ Г±ГІГ°Г®Г©ГЄГЁ ГЁГЈГ°Г»
 {
 	unsigned int W;
 	unsigned int H;
@@ -27,7 +27,7 @@ struct GameConfig//Настройки игры
 	unsigned int K;
 };
 
-struct RobotInfo //Характеристики робота
+struct RobotInfo //Г•Г Г°Г ГЄГІГҐГ°ГЁГ±ГІГЁГЄГЁ Г°Г®ГЎГ®ГІГ 
 {
 	string Name;
 	string Author;
@@ -50,7 +50,7 @@ struct RobotInfo //Характеристики робота
 #define ATTACK			1
 #define REDISTRIBUTION	2
 
-//Вспомогательные классы
+//Г‚Г±ГЇГ®Г¬Г®ГЈГ ГІГҐГ«ГјГ­Г»ГҐ ГЄГ«Г Г±Г±Г»
 class Action
 {
 protected:	
@@ -92,20 +92,20 @@ public:
 	RobotActions(const RobotActions& from);
 	RobotActions();
 	~RobotActions();	
-	void addActionMove(unsigned int x, unsigned int y);
-	void addActionAttack(unsigned int victimID /*ID атакуемого робота*/);
+	void addActionMove(int x, int y);
+	void addActionAttack(unsigned int victimID /*ID Г ГІГ ГЄГіГҐГ¬Г®ГЈГ® Г°Г®ГЎГ®ГІГ */);
 	void addActionRedistribution(unsigned int A, unsigned int P, unsigned int V);
 	vector<Action*> getActions();
 };
 
-struct StepInfo //структура, передаваемая роботу
+struct StepInfo //Г±ГІГ°ГіГЄГІГіГ°Г , ГЇГҐГ°ГҐГ¤Г ГўГ ГҐГ¬Г Гї Г°Г®ГЎГ®ГІГі
 {
-	vector<RobotInfo> robotsInfo;											//Состояния всех роботов
-	unsigned int stepNumber;												//Номер шага
-	GameConfig gameConfig;													//Настройки игры
-	unsigned int ID;														//ID робота
-	list<pair<unsigned int/* x */, unsigned int/* y */>> chargingStations;	//Пункты подзарядки
-	list<pair<unsigned int/* x */, unsigned int/* y */>> maintenance;		//Пункты тех. обслуживания
-	list < pair<unsigned int/* ID */, RobotActions>> actionsList;			//Лист действий других участников
-	RobotActions* pRobotActions;											//Указатель на класс, который хранит ответ робота (его выбранные действия на текущем шаге) заполняется роботом
+	vector<RobotInfo> robotsInfo;											//Г‘Г®Г±ГІГ®ГїГ­ГЁГї ГўГ±ГҐГµ Г°Г®ГЎГ®ГІГ®Гў
+	unsigned int stepNumber;												//ГЌГ®Г¬ГҐГ° ГёГ ГЈГ 
+	GameConfig gameConfig;													//ГЌГ Г±ГІГ°Г®Г©ГЄГЁ ГЁГЈГ°Г»
+	unsigned int ID;														//ID Г°Г®ГЎГ®ГІГ 
+	list<pair<unsigned int/* x */, unsigned int/* y */>> chargingStations;	//ГЏГіГ­ГЄГІГ» ГЇГ®Г¤Г§Г Г°ГїГ¤ГЄГЁ
+	list<pair<unsigned int/* x */, unsigned int/* y */>> maintenance;		//ГЏГіГ­ГЄГІГ» ГІГҐГµ. Г®ГЎГ±Г«ГіГ¦ГЁГўГ Г­ГЁГї
+	list < pair<unsigned int/* ID */, RobotActions>> actionsList;			//Г‹ГЁГ±ГІ Г¤ГҐГ©Г±ГІГўГЁГ© Г¤Г°ГіГЈГЁГµ ГіГ·Г Г±ГІГ­ГЁГЄГ®Гў
+	RobotActions* pRobotActions;											//Г“ГЄГ Г§Г ГІГҐГ«Гј Г­Г  ГЄГ«Г Г±Г±, ГЄГ®ГІГ®Г°Г»Г© ГµГ°Г Г­ГЁГІ Г®ГІГўГҐГІ Г°Г®ГЎГ®ГІГ  (ГҐГЈГ® ГўГ»ГЎГ°Г Г­Г­Г»ГҐ Г¤ГҐГ©Г±ГІГўГЁГї Г­Г  ГІГҐГЄГіГ№ГҐГ¬ ГёГ ГЈГҐ) Г§Г ГЇГ®Г«Г­ГїГҐГІГ±Гї Г°Г®ГЎГ®ГІГ®Г¬
 };
