@@ -154,7 +154,8 @@ unsigned int get_week_robot()
 		if (r->Author.compare("Bezzemeltsev") 
 			&& r->Author.compare("NPC")
 			&& r->Author.compare("Timoshin")
-			&& r->Author.compare("Dipsy")
+			&& r->Author.compare("Gutkina")
+			&& r->Author.compare("Dimitrieva")
 			) {
 			if (r->P < protection &&r->Alive)
 			{
@@ -168,7 +169,7 @@ unsigned int get_week_robot()
 
 bool is_energy_critical()
 {
-	return (((double)me->E) / step_info->gameConfig.E_max) < 0.75;
+	return (((double)me->E) / step_info->gameConfig.E_max) < 0.8;
 }
 
 bool is_l_critical()
@@ -205,7 +206,7 @@ void do_action()
 
 	if (current_state.energy_crit)
 	{
-		if ((double)me->E / step_info->gameConfig.E_max > 0.98) current_state.energy_crit = false;
+		if ((double)me->E / step_info->gameConfig.E_max > 0.95) current_state.energy_crit = false;
 		Point station = nearest_station(true);
 		step_info->pRobotActions->addActionRedistribution(0.1 * me->L, 0.6*me->L, 0.3 * me->L);
 		move(station);
