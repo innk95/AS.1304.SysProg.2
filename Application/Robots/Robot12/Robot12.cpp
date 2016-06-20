@@ -131,6 +131,7 @@ extern "C" __declspec(dllexport) void DoStep(StepInfo* _stepInfo)
 			break;
 		}
 	}
+
 	srand(time(NULL));
 	//myInfo = &_myInfo;
 	int maxDistToMove = stepInfo->gameConfig.V_max * myInfo->V * myInfo->E /
