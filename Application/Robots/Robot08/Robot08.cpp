@@ -2,8 +2,11 @@
 //
 
 #include "stdafx.h"
+#include <set>
 
 //#include "resources.h"
+
+const set<string> team = { "Tinky-Winky", "Dipsy", "Laa-Laa", "Poo", "THRASH_SPEED_METAL" };
 
 struct vrag
 {
@@ -175,7 +178,7 @@ extern "C" __declspec(dllexport) void DoStep(StepInfo* _stepInfo)
 
 	for (int i = 0; i < stepInfo->robotsInfo.size();i++)
 	{
-		if ((!(stepInfo->robotsInfo[i].Alive)) || (stepInfo->robotsInfo[i].Author=="Dimitrieva")) continue;
+		if ((!(stepInfo->robotsInfo[i].Alive)) || (team.find(stepInfo->robotsInfo[i].Name)) != team.end()) continue;
 
 		Point my, he, dist;
 		my.x = myInfo->x;
