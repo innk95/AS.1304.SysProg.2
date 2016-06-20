@@ -103,6 +103,8 @@ void move(Point p)
 	double max_distance = max_move_distance();
 	double dx = me_at->x - p.x;
 	double dy = me_at->y - p.y;
+	step_info->pRobotActions->addActionRedistribution(0*me->L, 0.4*me->L, 0.6*me->L);
+
 	if (distance < max_distance)
 	{
 		step_info->pRobotActions->addActionMove(-dx, -dy);
@@ -124,6 +126,7 @@ void attack(unsigned int id)
 	double max_distance = max_attack_distance();
 	if (distance < max_distance)
 	{
+		step_info->pRobotActions->addActionRedistribution(0.6*me->L, 0.3*me->L, 0.1*me->L);
 		step_info->pRobotActions->addActionAttack(id);
 	} else
 	{
@@ -148,7 +151,11 @@ unsigned int get_week_robot()
 	unsigned int id = ROBOT_NULL;
 	int protection = 100;
 	for (auto r = step_info->robotsInfo.begin(); r != step_info->robotsInfo.end(); ++r) {
-		if (r->Author.compare("Bezzemeltsev") && r->Author.compare("NPC")) {
+		if (r->Author.compare("Bezzemeltsev") 
+			&& r->Author.compare("NPC")
+			&& r->Author.compare("Timoshin")
+			&& r->Author.compare("Dipsy")
+			) {
 			if (r->P < protection &&r->Alive)
 			{
 				id = r->ID;
@@ -161,12 +168,12 @@ unsigned int get_week_robot()
 
 bool is_energy_critical()
 {
-	return (((double)me->E) / step_info->gameConfig.E_max) < 0.6;
+	return (((double)me->E) / step_info->gameConfig.E_max) < 0.75;
 }
 
 bool is_l_critical()
 {
-	return ((double)me->L / step_info->gameConfig.L_max) < 0.6;
+	return ((double)me->L / step_info->gameConfig.L_max) < 0.75;
 }
 
 unsigned int atecked_at_last()
@@ -198,8 +205,9 @@ void do_action()
 
 	if (current_state.energy_crit)
 	{
-		if ((double)me->E / step_info->gameConfig.E_max > 0.95) current_state.energy_crit = false;
+		if ((double)me->E / step_info->gameConfig.E_max > 0.98) current_state.energy_crit = false;
 		Point station = nearest_station(true);
+		step_info->pRobotActions->addActionRedistribution(0.1 * me->L, 0.6*me->L, 0.3 * me->L);
 		move(station);
 		return;
 	}
@@ -207,14 +215,20 @@ void do_action()
 	{
 		if (((double)me->L / step_info->gameConfig.L_max) > 0.95) current_state.l_crit = false;
 		Point station = nearest_station(false);
+		step_info->pRobotActions->addActionRedistribution(0.1 * me->L, 0.6*me->L, 0.3 * me->L);
 		move(station);
 		return;
 	}
 	
 	if (current_state.victim != ROBOT_NULL)
 	{
-		attack(current_state.victim);
-		return;
+		if (find_robot(current_state.victim).Alive)
+		{
+			attack(current_state.victim);
+			return;
+		}
+
+		current_state.victim = ROBOT_NULL;
 	}
 
 	unsigned int worst_enemy = atecked_at_last();
