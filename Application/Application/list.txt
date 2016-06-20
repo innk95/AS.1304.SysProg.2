@@ -5,3 +5,4 @@ Robot08.dll Dimitrieva Dimitrieva
 Robot12.dll Gavriil Kysylbaikov
 Robot07.dll Dipsy Gutkina
 Robot09.dll Dobashina Dobashina
+Robot01.dll Vados Aganov
