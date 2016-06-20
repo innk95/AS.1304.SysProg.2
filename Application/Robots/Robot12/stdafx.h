@@ -14,6 +14,7 @@
 #include <vector>
 #include <list>
 #include <fstream>
+#include <ctime>
 using namespace std;
 #include "../../Resources/resources.h"
 
