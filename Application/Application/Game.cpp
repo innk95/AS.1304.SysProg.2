@@ -1757,8 +1757,9 @@ INT Game::startRound()
 			for (int j = 0; j < i; ++j){
 				UINT distance = getDistance(x, y, m_Robots_ptr[j]->x, m_Robots_ptr[j]->y);
 				//UINT distance = abs(int(x - m_Robots_const[j].x)) + abs(int(y - m_Robots_const[j].y));
-				if (distance < 2 * m_Config.V_max){
-					flag = 1;
+//				if (distance < 2 * m_Config.V_max) {
+				if (distance < 1) {
+						flag = 1;
 					break;
 				}
 			}
