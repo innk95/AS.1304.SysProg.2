@@ -8,3 +8,6 @@ Robot09.dll Dobashina Dobashina
 Robot01.dll Vados Aganov
 Robot03.dll Vupsen Baganov
 Robot21.dll Poo Fratkin
+Robot17.dll Robot1 Panshina
+Robot15.dll Robot2 Lukacheva
+Robot11.dll Robot3 Kostyrko
