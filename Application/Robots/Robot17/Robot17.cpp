@@ -307,36 +307,15 @@ pair<unsigned int, Point> get_weekness_robot(StepInfo* _stepInfo, characteristic
 	int protection = 100;
 	Point p;
 	bool find = false;
-	if (!find)
+	for (auto it = _stepInfo->robotsInfo.begin(); it != _stepInfo->robotsInfo.end(); ++it)
 	{
-		for (auto it = _stepInfo->robotsInfo.begin(); it != _stepInfo->robotsInfo.end(); ++it)
-		{
-			if (it->Author == "Timoshin")
+		if (it->ID != CHRCTR.ID && (it->Author != "Panshina" && it->Author != "Lukacheva" && it->Author != "Kostyrko")) {
+			if (it->P < protection &&it->Alive)
 			{
-				if (it->P < protection &&it->Alive)
-				{
-					id = it->ID;
-					p.x = it->x;
-					p.y = it->y;
-					protection = it->P;
-					find = true;
-				}
-			}
-
-		}
-	}
-	if (!find)
-	{
-		for (auto it = _stepInfo->robotsInfo.begin(); it != _stepInfo->robotsInfo.end(); ++it)
-		{
-			if (it->ID != CHRCTR.ID && (it->Author != "Panshina" && it->Author != "Lukacheva" && it->Author != "Kostyrko")) {
-				if (it->P < protection &&it->Alive)
-				{
-					id = it->ID;
-					p.x = it->x;
-					p.y = it->y;
-					protection = it->P;
-				}
+				id = it->ID;
+				p.x = it->x;
+				p.y = it->y;
+				protection = it->P;
 			}
 		}
 	}
@@ -593,7 +572,7 @@ extern "C" __declspec(dllexport) void DoStep(StepInfo* _stepInfo)
 
 			if (attack) {
 				if (CHRCTR.L == _stepInfo->gameConfig.L_max) {
-					_stepInfo->pRobotActions->addActionRedistribution(CHRCTR.L*0.2, CHRCTR.L*0.6, CHRCTR.L*0.2);
+					_stepInfo->pRobotActions->addActionRedistribution(CHRCTR.L*0.4, CHRCTR.L*0.4, CHRCTR.L*0.2);
 
 				}
 				else
@@ -645,3 +624,4 @@ extern "C" __declspec(dllexport) void DoStep(StepInfo* _stepInfo)
 	}
 
 }
+
