@@ -28,8 +28,8 @@ Point getCStation() {
 		if (Pyth(vec.x, vec.y) < Pyth(min_dX, min_dY)) {
 			real_dX = vec.x;
 			real_dY = vec.y;
-			min_dX = abs(vec.x);
-			min_dY = abs(vec.y);
+			min_dX = vec.x;
+			min_dY = vec.y;
 		}
 	}
 	return Point(real_dX, real_dY);
@@ -45,8 +45,8 @@ Point getMStation() {
 		if (Pyth(vec.x, vec.y) < Pyth(min_dX, min_dY)) {
 			real_dX = vec.x;
 			real_dY = vec.y;
-			min_dX = abs(vec.x);
-			min_dY = abs(vec.y);
+			min_dX = vec.x;
+			min_dY = vec.y;
 		}
 	}
 	return Point(real_dX, real_dY);
@@ -69,22 +69,26 @@ extern "C" __declspec(dllexport) void DoStep(StepInfo* _stepInfo)
 	int maxDistToMove = stepInfo->gameConfig.V_max * myInfo->V * myInfo->E /
 		(stepInfo->gameConfig.L_max * stepInfo->gameConfig.E_max);
 
-	if ((double)myInfo->E / stepInfo->gameConfig.E_max < 0.5 &&
+	if ((double)myInfo->E / stepInfo->gameConfig.E_max < 0.951 &&
 		myInfo->E - stepInfo->gameConfig.dE_V > 0) {
 		Point CstationPos = getCStation();
 		if (Pyth(CstationPos.x, CstationPos.y) <= maxDistToMove) {
-			stepInfo->pRobotActions->addActionMove(CstationPos.x, CstationPos.y);
+			stepInfo->pRobotActions->addActionMove(CstationPos.x - myInfo->x, CstationPos.y - myInfo->y);
+			if (myInfo->E - stepInfo->gameConfig.dE_V > 0) {
+				stepInfo->pRobotActions->addActionMove(1, 0);
+				stepInfo->pRobotActions->addActionMove(-1, 0);
+			}
 		}
 		else {
-			stepInfo->pRobotActions->addActionRedistribution(1/*новое значение A*/, myInfo->L - 2/*новое значение P*/, 1 /* новое значение V*/);
+			stepInfo->pRobotActions->addActionRedistribution(stepInfo->gameConfig.L_max*0.01/*новое значение A*/, stepInfo->gameConfig.L_max*0.89 /*новое значение P*/, stepInfo->gameConfig.L_max*0.10 /* новое значение V*/);
 		}
 
 	}
 	else {
 		Point MstationPos = getMStation();
 		if (Pyth(MstationPos.x, MstationPos.y) <= maxDistToMove) {
-			stepInfo->pRobotActions->addActionMove(MstationPos.x, MstationPos.y);
-			stepInfo->pRobotActions->addActionRedistribution(1/*новое значение A*/, myInfo->L - 2/*новое значение P*/, 1 /* новое значение V*/);
+			stepInfo->pRobotActions->addActionMove(MstationPos.x - myInfo->x, MstationPos.y - myInfo->y);
+			stepInfo->pRobotActions->addActionRedistribution(stepInfo->gameConfig.L_max*0.01/*новое значение A*/, stepInfo->gameConfig.L_max*0.89/*новое значение P*/, stepInfo->gameConfig.L_max*0.10 /* новое значение V*/);
 			if (myInfo->E - stepInfo->gameConfig.dE_V > 0) {
 				stepInfo->pRobotActions->addActionMove(1, 0);
 				stepInfo->pRobotActions->addActionMove(-1, 0);
@@ -93,10 +97,10 @@ extern "C" __declspec(dllexport) void DoStep(StepInfo* _stepInfo)
 		else {
 			Point CstationPos = getCStation();
 			if (Pyth(CstationPos.x, CstationPos.y) <= maxDistToMove) {
-				stepInfo->pRobotActions->addActionMove(CstationPos.x, CstationPos.y);
+				stepInfo->pRobotActions->addActionMove(CstationPos.x - myInfo->x, CstationPos.y - myInfo->y);
 			}
 			else {
-				stepInfo->pRobotActions->addActionRedistribution(1/*новое значение A*/, myInfo->L - 2/*новое значение P*/, 1 /* новое значение V*/);
+				stepInfo->pRobotActions->addActionRedistribution(stepInfo->gameConfig.L_max*0.01/*новое значение A*/, stepInfo->gameConfig.L_max*0.89/*новое значение P*/, stepInfo->gameConfig.L_max*0.10 /* новое значение V*/);
 			}
 		}
 	}
