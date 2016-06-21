@@ -74,7 +74,7 @@ extern "C" __declspec(dllexport) void DoStep(StepInfo* _stepInfo)
 		Point CstationPos = getCStation();
 		if (Pyth(CstationPos.x, CstationPos.y) <= maxDistToMove) {
 			stepInfo->pRobotActions->addActionMove(1, 0);
-			stepInfo->pRobotActions->addActionMove(CstationPos.x - myInfo->x, CstationPos.y - myInfo->y);
+			stepInfo->pRobotActions->addActionMove(CstationPos.x, CstationPos.y);
 			if (myInfo->E - stepInfo->gameConfig.dE_V > 0) {
 				stepInfo->pRobotActions->addActionMove(1, 0);
 				stepInfo->pRobotActions->addActionMove(-1, 0);
@@ -88,7 +88,7 @@ extern "C" __declspec(dllexport) void DoStep(StepInfo* _stepInfo)
 	else {
 		Point MstationPos = getMStation();
 		if (Pyth(MstationPos.x, MstationPos.y) <= maxDistToMove) {
-			stepInfo->pRobotActions->addActionMove(MstationPos.x - myInfo->x, MstationPos.y - myInfo->y);
+			stepInfo->pRobotActions->addActionMove(MstationPos.x, MstationPos.y);
 			stepInfo->pRobotActions->addActionRedistribution(stepInfo->gameConfig.L_max*0.01/*новое значение A*/, stepInfo->gameConfig.L_max*0.89/*новое значение P*/, stepInfo->gameConfig.L_max*0.10 /* новое значение V*/);
 			if (myInfo->E - stepInfo->gameConfig.dE_V > 0) {
 				stepInfo->pRobotActions->addActionMove(1, 0);
@@ -99,7 +99,7 @@ extern "C" __declspec(dllexport) void DoStep(StepInfo* _stepInfo)
 			Point CstationPos = getCStation();
 			if (Pyth(CstationPos.x, CstationPos.y) <= maxDistToMove) {
 				stepInfo->pRobotActions->addActionMove(1, 0);
-				stepInfo->pRobotActions->addActionMove(CstationPos.x - myInfo->x, CstationPos.y - myInfo->y);
+				stepInfo->pRobotActions->addActionMove(CstationPos.x, CstationPos.y);
 			}
 			else {
 				stepInfo->pRobotActions->addActionRedistribution(stepInfo->gameConfig.L_max*0.01/*новое значение A*/, stepInfo->gameConfig.L_max*0.89/*новое значение P*/, stepInfo->gameConfig.L_max*0.10 /* новое значение V*/);
