@@ -7,3 +7,4 @@ Robot07.dll Dipsy Gutkina
 Robot09.dll Dobashina Dobashina
 Robot01.dll Vados Aganov
 Robot03.dll Vupsen Baganov
+Robot21.dll Poo Fratkin
