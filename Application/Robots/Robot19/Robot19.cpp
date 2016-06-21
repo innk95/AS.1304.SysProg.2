@@ -6,7 +6,8 @@
 using namespace std;
 
 
-const set<string> team = {"Tinky-Winky", "Dipsy", "Laa-Laa", "Poo"};
+
+const set<string> team = {"Tinky-Winky", "Dipsy", "Laa-Laa", "Poo", "TRASH_SPEED_METAL"};
 enum stats {none, speed, attack, protection};
 
 
@@ -33,6 +34,7 @@ void action(StepInfo* info, const RobotInfo& me);
 void stateRecount(StepInfo* info, const RobotInfo& me);
 int getAttackerId(list<pair<unsigned, RobotActions>> &actions, const RobotInfo& me);
 int getVictimId(const vector<RobotInfo>& robots, const GameConfig& cfg);
+bool isTargetSafe(const int& target_id, StepInfo* info, const RobotInfo& me);
 
 
 extern "C" __declspec(dllexport) void DoStep(StepInfo* _stepInfo)
@@ -42,10 +44,7 @@ extern "C" __declspec(dllexport) void DoStep(StepInfo* _stepInfo)
 	if (_stepInfo->stepNumber == 1) //alliance deployment
 	{
 		auto dest_charge = nearestStation(_stepInfo->chargingStations, me.x, me.y, _stepInfo->gameConfig.W, _stepInfo->gameConfig.H);
-		ofstream f("deployment.txt", ios::out);
-		f << dest_charge.first << " " << dest_charge.second;
 		state.required = speed;
-		f.close();
 	}
 	stateRecount(_stepInfo, me);
 	action(_stepInfo, me);
@@ -140,7 +139,6 @@ void move(const int &dst_x, const int &dst_y, StepInfo* info, const RobotInfo& m
 		return;
 	}
 		
-
 	auto distance_x = min(abs_x, info->gameConfig.W - abs_x);
 	auto distance_y = min(abs_y, info->gameConfig.H - abs_y);
 
@@ -153,7 +151,7 @@ void move(const int &dst_x, const int &dst_y, StepInfo* info, const RobotInfo& m
 			distance_x--;
 		if (distance_y > 0)
 			distance_y--;
-
+		
 		distance = getDistance(distance_x, distance_y);
 	}
 
@@ -203,7 +201,7 @@ void redist(StepInfo* info, const RobotInfo& me, stats required)
 			if (me.P > cfg.L_max / 3)
 				dP = cfg.dL / 2;
 				
-				info->pRobotActions->addActionRedistribution(me.A - dA, me.P - dP, me.V + dA + dP);		
+			info->pRobotActions->addActionRedistribution(me.A - dA, me.P - dP, me.V + dA + dP);		
 			break;
 		}
 
@@ -235,7 +233,7 @@ void redist(StepInfo* info, const RobotInfo& me, stats required)
 			if (me.P > cfg.L_max / 3)
 				dP = cfg.dL / 2;
 
-					info->pRobotActions->addActionRedistribution(me.A + dP + dV, me.P - dP, me.V - dV);
+			info->pRobotActions->addActionRedistribution(me.A + dP + dV, me.P - dP, me.V - dV);
 
 			break;
 		}
@@ -290,8 +288,7 @@ int getMaxAttackDistance(const GameConfig& cfg, const RobotInfo& me)
 
 void action(StepInfo* info, const RobotInfo& me)
 {
-	
-	
+		
 	redist(info, me, state.required);
 
 	if (state.dst_x != -1 && state.dst_y != -1)
@@ -315,6 +312,7 @@ int getAttackerId(list<pair<unsigned, RobotActions>> &actions, const RobotInfo& 
 		auto cur_actions = robot.second.getActions();
 		for (auto act : cur_actions)
 		{
+			
 			if (Attack* casted_action = dynamic_cast<Attack*>(act))
 			{
 				if (casted_action->victimID == me.ID)
@@ -330,7 +328,7 @@ int getAttackerId(list<pair<unsigned, RobotActions>> &actions, const RobotInfo& 
 
 int getVictimId(const vector<RobotInfo>& robots, const GameConfig& cfg)
 {
-	int min_production = cfg.E_max * cfg.L_max;
+	int min_production = cfg.E_max * cfg.L_max; //init value to compare
 	int victim_id = -1;
 
 	for (const auto &robot : robots)
@@ -348,13 +346,29 @@ int getVictimId(const vector<RobotInfo>& robots, const GameConfig& cfg)
 	return victim_id;
 }
 
+bool isTargetSafe(const int& target_id, StepInfo* info, const RobotInfo& me)
+{
+	if (target_id == -1)
+	{
+		return false;
+	}
+
+	auto target = findRobot(info->robotsInfo, target_id);
+	if (target.E * target.P < 1.5 * me.E * me.A && target.Alive)
+	{
+		return true;
+	}
+	
+	return false;
+}
+
 void stateRecount(StepInfo* info, const RobotInfo& me)
 {
 	
 	const auto &cfg = info->gameConfig;
 	state.required = protection;
 
-	
+
 	if (me.E < 0.7 * cfg.E_max || info->stepNumber > 0.95 * cfg.N) //the first is energy, no way. the last is too, lol
 	{
 		auto charge = nearestStation(info->chargingStations, me.x, me.y, cfg.W, cfg.H);
@@ -364,7 +378,7 @@ void stateRecount(StepInfo* info, const RobotInfo& me)
 		return;
 	}
 
-	if (me.L < 0.65 * cfg.L_max)
+	if (me.L < 0.65 * cfg.L_max) //2nd (TODO: balance stats)
 	{
 		auto tech = nearestStation(info->maintenance, me.x, me.y, cfg.W, cfg.H);
 		state.dst_x = tech.first;
@@ -373,18 +387,38 @@ void stateRecount(StepInfo* info, const RobotInfo& me)
 		return;
 	}
 
-	int attacker_id = getAttackerId(info->actionsList, me);
+	ifstream get_target("target.txt");
+	if (get_target.good())
+	{
+		int target_id;
+		get_target >> target_id;
+		get_target.close();
+		if (isTargetSafe(target_id, info, me))
+		{		
+			state.enemy_id = target_id;
+			return;
+		}	
+	}
 
-    if (attacker_id != -1)
+	ofstream define_target("target.txt", ios::trunc);
+
+	int attacker_id = getAttackerId(info->actionsList, me);
+    if (attacker_id != -1) //yep, was attacked last step 
     {
 		state.enemy_id = attacker_id;
-		ofstream f1("target.txt");
-		f1 << attacker_id;
+		if (define_target.good())
+			define_target << attacker_id;
 		state.required = protection;
-		return;
     }
+	else
+	{
+		int victim_id = getVictimId(info->robotsInfo, info->gameConfig);
+		state.enemy_id = victim_id;
+		if (define_target.good())
+			define_target << victim_id;
+		state.required = attack;
+	}
 
-
-	state.enemy_id = getVictimId(info->robotsInfo, info->gameConfig);	
-	state.required = attack;
+	define_target.close();
+	return;
 }
