@@ -11,3 +11,4 @@ Robot21.dll Poo Fratkin
 Robot17.dll Robot1 Panshina
 Robot15.dll Robot2 Lukacheva
 Robot11.dll Robot3 Kostyrko
+Robot16.dll Kristina Palmova
