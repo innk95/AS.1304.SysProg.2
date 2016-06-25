@@ -920,10 +920,10 @@ bool Game::doActionRedistribution(UINT robot_id, UINT _A, UINT _P, UINT _V)
 		m_RoundLogList.push_back(actionLog);
 		return false;
 	}
-	INT dA = abs(old_A - _A);
-	INT dP = abs(old_P - _P);
-	INT dV = abs(old_V - _V);
-	INT dL = (dA + dP + dV) / 2;
+	INT dA = abs(int(old_A) - int(_A));
+	INT dP = abs(int(old_P) - int(_P));
+	INT dV = abs(int(old_V) - int(_V));
+	INT dL = (dA + dP + dV) ;
 	if (dL > max_dL){
 		actionLog.result = false;
 		m_RoundLogList.push_back(actionLog);
