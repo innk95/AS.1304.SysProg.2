@@ -103,7 +103,7 @@ void move(Point p)
 	double max_distance = max_move_distance();
 	double dx = me_at->x - p.x;
 	double dy = me_at->y - p.y;
-	step_info->pRobotActions->addActionRedistribution(0*me->L, 0.4*me->L, 0.6*me->L);
+	step_info->pRobotActions->addActionRedistribution(0*me->L, 0.6*me->L, 0.4*me->L);
 
 	if (distance < max_distance)
 	{
@@ -126,8 +126,10 @@ void attack(unsigned int id)
 	double max_distance = max_attack_distance();
 	if (distance < max_distance)
 	{
-		step_info->pRobotActions->addActionRedistribution(0.6*me->L, 0.3*me->L, 0.1*me->L);
+		step_info->pRobotActions->addActionRedistribution(0.6*me->L, 0.4*me->L, 0.0*me->L);
 		step_info->pRobotActions->addActionAttack(id);
+		//step_info->pRobotActions->addActionRedistribution(0 * me->L, 0.9*me->L, 0.09 * me->L);
+
 	} else
 	{
 		move(robot_location);
@@ -174,7 +176,7 @@ bool is_energy_critical()
 
 bool is_l_critical()
 {
-	return ((double)me->L / step_info->gameConfig.L_max) < 0.75;
+	return ((double)me->L / step_info->gameConfig.L_max) < 0.8;
 }
 
 unsigned int atecked_at_last()
@@ -201,23 +203,26 @@ unsigned int atecked_at_last()
 
 void do_action()
 {
-	if (is_energy_critical()) current_state.energy_crit = true;
+	if (is_energy_critical() || step_info->stepNumber > 900) current_state.energy_crit = true;
 	if (is_l_critical()) current_state.l_crit = true;
+
+
 
 	if (current_state.energy_crit)
 	{
-		if ((double)me->E / step_info->gameConfig.E_max > 0.95) current_state.energy_crit = false;
+		if ((double)me->E / step_info->gameConfig.E_max > 0.98) current_state.energy_crit = false;
 		Point station = nearest_station(true);
-		step_info->pRobotActions->addActionRedistribution(0.1 * me->L, 0.6*me->L, 0.3 * me->L);
+		//step_info->pRobotActions->addActionRedistribution(0.1 * me->L, 0.85*me->L, 0.05 * me->L);
 		move(station);
 		return;
 	}
 	if (current_state.l_crit)
 	{
-		if (((double)me->L / step_info->gameConfig.L_max) > 0.95) current_state.l_crit = false;
+		if (((double)me->L / step_info->gameConfig.L_max) > 0.98) current_state.l_crit = false;
 		Point station = nearest_station(false);
-		step_info->pRobotActions->addActionRedistribution(0.1 * me->L, 0.6*me->L, 0.3 * me->L);
+		//step_info->pRobotActions->addActionRedistribution(0.1 * me->L, 0.85*me->L, 0.05 * me->L);
 		move(station);
+
 		return;
 	}
 	
