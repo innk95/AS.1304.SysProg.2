@@ -509,7 +509,7 @@ CString cutString(CString str, CDC* pDC, UINT width)
 	return str;
 }
 
-void Game::drawГ‘onditions()
+void Game::drawСonditions()
 {
 	m_Conditions_start.x = CONDITIONS_START_X;
 	m_Conditions_start.y = CONDITIONS_START_Y;
@@ -802,7 +802,7 @@ void Game::clearArea(COLORREF color, UINT x1, UINT y1, UINT x2, UINT y2)
 }
 
 
-CPoint Game::normalizeГ‘oordinates(CPoint pos)
+CPoint Game::normalizeСoordinates(CPoint pos)
 {
 	CPoint norm_pos(pos);
 	while (norm_pos.x < 0){
@@ -882,9 +882,9 @@ bool Game::doActionMove(UINT robot_id, INT dx, INT dy)
 		m_RoundLogList.push_back(actionLog);
 		return false;
 	}
-	CPoint new_pos = normalizeГ‘oordinates(CPoint(self_robot->x + dx, self_robot->y + dy));
+	CPoint new_pos = normalizeСoordinates(CPoint(self_robot->x + dx, self_robot->y + dy));
 	
-	//ГЌГҐГЇГ®Г­ГїГІГ­Г Гї Г±ГЁГІГіГ Г¶ГЁГї Гў Г±Г«ГіГ·Г ГҐ ГЇГҐГ°ГҐГ¬ГҐГ№ГҐГ­ГЁГї Г°Г®ГЎГ®ГІГ®Гў Гў Г®Г¤Г­Гі ГЄГ«ГҐГІГЄГі
+	//Непонятная ситуация в случае перемещения роботов в одну клетку
 	//if (m_pField->isOccupied(new_pos))
 	//	return false;
 
@@ -991,9 +991,6 @@ bool Game::doActionAttack(UINT robot_id, UINT victim_id)
 			other_robot->P = 0;			
 			other_robot->E -= dE;
 		}
-		if (other_robot->L < 0) {
-			other_robot->L = 0;
-		}
 	}
 	else{
 		self_robot->A += delta;
@@ -1001,9 +998,6 @@ bool Game::doActionAttack(UINT robot_id, UINT victim_id)
 		if (self_robot->A < 0){
 			self_robot->A = 0;			
 			self_robot->E -= dE;			
-		}
-		if (self_robot->L < 0) {
-			self_robot->L = 0;
 		}
 	}
 	self_robot->E -= m_Config.dE_A;
@@ -1046,11 +1040,11 @@ DWORD WINAPI robotThread(LPVOID lpParam)
 			threadStruct->robotFunction(threadStruct->sendStruct);
 		}
 		else{
-			AfxMessageBox("Г”ГіГ­ГЄГ¶ГЁГї Г­ГҐ ГЁГ­ГЁГ¶ГЁГ Г«ГЁГ§ГЁГ°Г®ГўГ Г­Г ");
+			AfxMessageBox("Функция не инициализирована");
 		}
 	}
 	__except(EXCEPTION_DEBUG_EVENT){
-		AfxMessageBox("ГЋГёГЁГЎГЄГ  ГґГіГ­ГЄГ¶ГЁГЁ dll");
+		AfxMessageBox("Ошибка функции dll");
 		//exit(-1);
 		return -1;
 	}
@@ -1161,21 +1155,21 @@ bool Game::setRobotsInfo(CString filePath)
 
 		char * pch = strtok(buffer, " ");
 		if (!pch){
-			AfxMessageBox("ГЋГёГЁГЎГЄГ  Г·ГІГҐГ­ГЁГї ГЇГіГІГЁ ГЄ dll");
+			AfxMessageBox("Ошибка чтения пути к dll");
 			return 0;
 		}
 		CString path(pch);
 
 		pch = strtok(NULL, " ");
 		if (!pch){
-			AfxMessageBox("ГЋГёГЁГЎГЄГ  Г·ГІГҐГ­ГЁГї ГЁГ¬ГҐГ­ГЁ Г°Г®ГЎГ®ГІГ ");
+			AfxMessageBox("Ошибка чтения имени робота");
 			return 0;
 		}
 		CString name(pch);
 
 		pch = strtok(NULL, " ");
 		if (!pch){
-			AfxMessageBox("ГЋГёГЁГЎГЄГ  Г·ГІГҐГ­ГЁГї ГЁГ¬ГҐГ­ГЁ Г ГўГІГ®Г°Г ");
+			AfxMessageBox("Ошибка чтения имени автора");
 			return 0;
 		}
 		string author(pch);
@@ -1217,14 +1211,14 @@ bool Game::setRobotsInfo(CString filePath)
 			(*it)->hDll = LoadLibrary((*it)->filePath);
 			if ((*it)->hDll == NULL){
 				CString str;
-				str.Format("ГЋГёГЁГЎГЄГ  Г§Г ГЈГ°ГіГ§ГЄГЁ dll: %s", (*it)->filePath);
+				str.Format("Ошибка загрузки dll: %s", (*it)->filePath);
 				AfxMessageBox(str);
 				return 0;
 			}
 			(*it)->robotFunction = (RobotFunction)GetProcAddress((*it)->hDll, "DoStep");
 			if ((*it)->robotFunction == NULL){
 				CString str;
-				str.Format("Г”ГіГ­ГЄГ¶ГЁГї DoStep Г­ГҐ Г­Г Г©Г¤ГҐГ­Г  Гў %s", (*it)->filePath);
+				str.Format("Функция DoStep не найдена в %s", (*it)->filePath);
 				AfxMessageBox(str);
 				return 0;
 			}
@@ -1248,7 +1242,7 @@ bool Game::setRobotsInfo(CString filePath)
 	HINSTANCE standartDll = LoadLibrary(STANDART_ROBOT_DLL);
 	if (standartDll == NULL){
 		CString str;
-		str.Format("ГЋГёГЁГЎГЄГ  Г§Г ГЈГ°ГіГ§ГЄГЁ dll Г±ГІГ Г­Г¤Г Г°ГІГ­Г®ГЈГ® Г°Г®ГЎГ®ГІГ : %s", STANDART_ROBOT_DLL);
+		str.Format("Ошибка загрузки dll стандартного робота: %s", STANDART_ROBOT_DLL);
 		AfxMessageBox(str);
 		return 0;
 	}
@@ -1486,6 +1480,8 @@ bool Game::end()
 
 		clearRoundLogList();
 
+		return true;
+
 
 	}
 	else{
@@ -1590,7 +1586,7 @@ void Game::fillStatsField(bool flag/*= 0*/)
 	m_pDC->SelectObject(oldPen);
 	m_pDC->SelectObject(oldBrush);
 
-	drawГ‘onditions();	
+	drawСonditions();	
 }
 
 
@@ -1658,21 +1654,21 @@ void Game::WriteLogToFile()
 	f << "-------------------Results----------------------" << endl;
 
 	for (auto it = m_RoundResults.begin(); it != m_RoundResults.end(); ++it){
-		f << "ГЊГҐГ±ГІГ®: "
+		f << "Место: "
 			<< (*it)->Rank
-			<< " ГЂГўГІГ®Г°: "
+			<< " Автор: "
 			<< (*it)->Author.c_str()
-			<< " ГђГ®ГЎГ®ГІ: "
+			<< " Робот: "
 			<< (*it)->Name.c_str()
-			<< " ГќГ­ГҐГ°ГЈГЁГї: "
+			<< " Энергия: "
 			<< (*it)->E
-			<< " Г“ГЎГЁГ©Г±ГІГўГ : "
+			<< " Убийства: "
 			<< (*it)->RoundFrags
-			<< " ГГ ГЈГЁ: "
+			<< " Шаги: "
 			<< (*it)->RoundAliveSteps
-			<< " ГЋГ·ГЄГЁ: "
+			<< " Очки: "
 			<< (*it)->RoundScore
-			<< " ГЃГ Г«Г«Г»: "
+			<< " Баллы: "
 			<< (*it)->Points
 			<< endl;
 	}
@@ -1776,7 +1772,7 @@ INT Game::startRound()
 			}
 			++num;
 			if (num > 100000){
-				AfxMessageBox("ГЌГҐ Г¬Г®ГЈГі Г°Г Г±Г±ГІГ ГўГЁГІГј Г°Г®ГЎГ®ГІГ®Гў :'(");
+				AfxMessageBox("Не могу расставить роботов :'(");
 				m_isNormalEnd = true;
 				end();
 				return 0;
@@ -1819,7 +1815,7 @@ INT Game::startRound()
 
 		++m_StepNum;
 
-		//Г”Г®Г°Г¬ГЁГ°Г®ГўГ Г­ГЁГҐ Г±ГІГ°ГіГЄГІГіГ°Г» StepInfo
+		//Формирование структуры StepInfo
 		StepInfo stepInfo;
 		for (auto it = m_Robots_start.begin(); it != m_Robots_start.end(); ++it){
 			RobotInfo robotInfo(it->second);
@@ -1903,7 +1899,7 @@ INT Game::startRound()
 			delete pRobotActions;
 		}
 
-		//ГЋГЎГ°Г ГЎГ®ГІГЄГ  Г°ГҐГ§ГіГ«ГјГІГ ГІГ®Гў ГёГ ГЈГ 
+		//Обработка результатов шага
 		for (UINT i = 0; i < size; ++i){
 			Robot* start_robot = m_Robots_ptr[i];
 			Robot* self_robot = &m_Robots_self[m_Robots_ptr[i]->ID];
@@ -2120,12 +2116,12 @@ void Game::endRound()
 	size = m_Robots_ptr.size();
 	m_RoundResults.resize(size);
 
-	//ГЋГЎГ°Г ГЎГ®ГІГЄГ  Г°ГҐГ§ГіГ«ГјГІГ ГІГ®Гў Г°Г ГіГ­Г¤Г 
+	//Обработка результатов раунда
 	for (USHORT i = 0; i < size; ++i){
 		Robot* cur_robot = m_Robots_ptr[i];
 		m_RoundResults[i] = cur_robot;
 
-		//ГЌГ Г·ГЁГ±Г«ГҐГ­ГЁГҐ Г®Г·ГЄГ®Гў Г§Г  ГіГЎГЁГ©Г±ГІГўГ  Гў Г°Г ГіГ­Г¤ГҐ
+		//Начисление очков за убийства в раунде
 		if (cur_robot->Alive){
 			cur_robot->RoundScore = m_Config.K * cur_robot->RoundFrags + cur_robot->E;
 		}
@@ -2292,18 +2288,18 @@ BOOL DeleteFolder(LPCSTR szPath)
 	if (lstrcmpi(szPath + 1, TEXT(":\\")) == 0 || szPath[0] == '\\' || szPath[0] == '\0')
 		return FALSE;
 
-	//ГЋГЎГјГҐГЄГІГ  ГіГ¦ГҐ Г­ГҐГІГі
+	//Обьекта уже нету
 	dwAttrs = GetFileAttributes(szPath);
 	if (dwAttrs == INVALID_FILE_ATTRIBUTES)
 		return TRUE;
 
-	//Г…Г±Г«ГЁ Г®ГЎГјГҐГЄГІ Г­ГҐ Г¤ГЁГ°ГҐГЄГІГ®Г°ГЁГї 
+	//Если обьект не директория 
 	if (~dwAttrs & FILE_ATTRIBUTE_DIRECTORY)
 		return FALSE;
 
 	SetLastError(0);
 
-	//ГЏГ°Г®ГЎГіГҐГ¬ Г±Г°Г Г§Гі ГіГ¤Г Г«ГЁГІГј Г¤ГЁГ°ГҐГЄГІГ®Г°ГЁГѕ
+	//Пробуем сразу удалить директорию
 	bRes = RemoveDirectory(szPath);
 	if (bRes == TRUE)
 		return TRUE;
@@ -2332,18 +2328,18 @@ BOOL DeleteFolder(LPCSTR szPath)
 
 	do
 	{
-		//ГЋГЇГіГ±ГЄГ ГҐГ¬ Г­Г Г·Г Г«ГјГ­Г»ГҐ . ГЁ ..
+		//Опускаем начальные . и ..
 		if (lstrcmpi(FindFileData.cFileName, ".") == 0 || lstrcmpi(FindFileData.cFileName, "..") == 0)
 			continue;
 
-		//ГЏГ°Г®ГЇГіГ±ГЄГ ГҐГ¬ Г±Г«ГЁГёГЄГ®Г¬ Г¤Г«ГЁГ­Г­Г»ГҐ ГЁГ¬ГҐГ­Г  ГґГ Г©Г«Г®Гў
+		//Пропускаем слишком длинные имена файлов
 		if (lstrlen(cPath) + lstrlen("\\") + lstrlen(FindFileData.cFileName) + 1 > MAX_PATH)
 			continue;
 
 		wsprintf(cCurrentFile, "%s\\%s", cPath, FindFileData.cFileName);
-		//Г“Г¤Г Г«ГїГҐГ¬ ГЇГ ГЇГЄГі
+		//Удаляем папку
 		if (FindFileData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
-		{    //Г‘ГЎГ°Г Г±Г»ГўГ ГҐГ¬ Г ГІГІГ°ГЁГЎГіГІГ»
+		{    //Сбрасываем аттрибуты
 			if (FindFileData.dwFileAttributes & FILE_ATTRIBUTE_READONLY)
 			{
 				FindFileData.dwFileAttributes &= ~FILE_ATTRIBUTE_READONLY;
@@ -2352,7 +2348,7 @@ BOOL DeleteFolder(LPCSTR szPath)
 
 			bRes = DeleteFolder(cCurrentFile);
 		}
-		//Г€Г­Г Г·ГҐ ГіГ¤Г Г«ГїГҐГ¬ ГґГ Г©Г«
+		//Иначе удаляем файл
 		else
 		{
 
