@@ -923,7 +923,7 @@ bool Game::doActionRedistribution(UINT robot_id, UINT _A, UINT _P, UINT _V)
 	UINT dA = abs(int(old_A) - int(_A));
 	UINT dP = abs(int(old_P) - int(_P));
 	UINT dV = abs(int(old_V) - int(_V));
-	UINT dL = (dA + dP + dV) ;
+	UINT dL = (dA + dP + dV) / 2;
 	if (dL > max_dL){
 		actionLog.result = false;
 		m_RoundLogList.push_back(actionLog);
