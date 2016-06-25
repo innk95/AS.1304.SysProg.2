@@ -991,6 +991,9 @@ bool Game::doActionAttack(UINT robot_id, UINT victim_id)
 			other_robot->P = 0;			
 			other_robot->E -= dE;
 		}
+		if (other_robot->L < 0) {
+			other_robot->L = 0;
+		}
 	}
 	else{
 		self_robot->A += delta;
@@ -998,6 +1001,9 @@ bool Game::doActionAttack(UINT robot_id, UINT victim_id)
 		if (self_robot->A < 0){
 			self_robot->A = 0;			
 			self_robot->E -= dE;			
+		}
+		if (self_robot->L < 0) {
+			self_robot->L = 0;
 		}
 	}
 	self_robot->E -= m_Config.dE_A;
