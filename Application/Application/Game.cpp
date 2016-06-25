@@ -83,7 +83,7 @@ Game::~Game()
 {
 	if (m_pField){
 		delete m_pField;
- 	}	
+	}	
 
 	clearRoundLogList();
 
@@ -920,9 +920,9 @@ bool Game::doActionRedistribution(UINT robot_id, UINT _A, UINT _P, UINT _V)
 		m_RoundLogList.push_back(actionLog);
 		return false;
 	}
-	INT dA = old_A - _A;
-	INT dP = old_P - _P;
-	INT dV = old_V - _V;
+	INT dA = abs(old_A - _A);
+	INT dP = abs(old_P - _P);
+	INT dV = abs(old_V - _V);
 	INT dL = (dA + dP + dV) / 2;
 	if (dL > max_dL){
 		actionLog.result = false;
