@@ -12,3 +12,4 @@ Robot16.dll Kristina Palmova
 Robot17.dll Robot1 Panshina
 Robot19.dll Tinky-Winky Timoshin
 Robot21.dll Poo Fratkin
+Robot22.dll Vad Petrov
